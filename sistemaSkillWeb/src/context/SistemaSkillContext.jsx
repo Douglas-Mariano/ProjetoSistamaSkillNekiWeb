@@ -6,7 +6,8 @@ export const SkillProvider = ({children}) => {
     const [nome, setNome] = useState('')
     const [login, setLogin] = useState('')
     const [senha, setSenha] = useState('')
-    const [email, setEmail] = useState("")
+
+    const [skills, setSkills] = useState([]);
 
     const [skill, setSkill] = useState('')
     const [descricao, setDescricao] = useState('')
@@ -19,7 +20,7 @@ export const SkillProvider = ({children}) => {
 
     return(
         <SistemaSkillContext.Provider value={{
-            nome, setNome, login, setLogin, senha, setSenha, skill, setSkill, descricao, setDescricao, imagem, setImagem, level, setLevel, usuarioLogado, setUsuarioLogado, mostrarSenha, setMostrarSenha, email, setEmail
+            nome, setNome, login, setLogin, senha, setSenha, skill, setSkill, descricao, setDescricao, imagem, setImagem, level, setLevel, usuarioLogado, setUsuarioLogado, mostrarSenha, setMostrarSenha, skills, setSkills
         }}>{children}</SistemaSkillContext.Provider>
     )
 }

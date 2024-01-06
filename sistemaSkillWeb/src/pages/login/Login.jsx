@@ -63,9 +63,10 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        const { token } = response.data;
+        const { token, usuario } = response.data;
 
         localStorage.setItem("token", token);
+        localStorage.setItem("idUsuario", usuario.id);
 
         navigate("/home");
       } else {

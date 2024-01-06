@@ -57,7 +57,7 @@ const Cadastro = () => {
       setSenha("");
       setConfirmarSenha("");
       setNome("");
-      getUsuarios();
+      //getUsuarios();
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
       setShowAlertCadastro({
