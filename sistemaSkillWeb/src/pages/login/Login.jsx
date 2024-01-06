@@ -14,171 +14,183 @@ import { SistemaSkillContext } from "../../context/SistemaSkillContext";
 import { api } from "../../api/api";
 
 const Login = () => {
-  const [lembrar, setLembrar] = useState(false);
   const {
-    email,
+    login,
+    setLogin,
     senha,
-    setEmail,
     setSenha,
-    setUsuarios,
-    setUsuarioLogado,
     mostrarSenha,
     setMostrarSenha,
   } = useContext(SistemaSkillContext);
-  const navigate = useNavigate();
+  const [lembrar, setLembrar] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getUsuarios();
+    const storedLogin = localStorage.getItem("storedLogin");
+    const storedSenha = localStorage.getItem("storedSenha");
+
+    if (storedLogin && storedSenha) {
+      setLogin(storedLogin);
+      setSenha(storedSenha);
+      setLembrar(true);
+    }
   }, []);
 
-  const getUsuarios = async () => {
-    try {
-      const response = await api.get("/users");
-      setUsuarios(response.data);
-    } catch (error) {
-      console.error("Erro ao obter usuários:", error);
-    }
+  const handleMostrarSenha = () => {
+    setMostrarSenha(!mostrarSenha);
   };
 
   const handleLembrar = () => {
     setLembrar(!lembrar);
 
     if (!lembrar) {
-      localStorage.setItem("dados", "seus_dados_aqui");
+      localStorage.setItem("storedLogin", login);
+      localStorage.setItem("storedSenha", senha);
     } else {
-      localStorage.removeItem("dados");
+      localStorage.removeItem("storedLogin");
+      localStorage.removeItem("storedSenha");
     }
-  };
-
-  const handleMostrarSenha = () => {
-    setMostrarSenha(!mostrarSenha);
   };
 
   const handleLogar = async (e) => {
     e.preventDefault();
-    const usuarios = await api.get("/users");
 
-    const usuarioEncontrado = usuarios.data.find(
-      (user) => user.email === email && user.senha === senha
-    );
+    try {
+      const response = await api.post("/usuarios/login", {
+        login,
+        senha,
+      });
 
-    if (usuarioEncontrado) {
-      setUsuarioLogado(usuarioEncontrado);
-      setShowAlert(false);
-      navigate("/home");
-    } else {
+      if (response.status === 200) {
+        const { token } = response.data;
+
+        localStorage.setItem("token", token);
+
+        navigate("/home");
+      } else {
+        setShowAlert(true);
+      }
+    } catch (error) {
+      console.error("Erro durante o login:", error);
       setShowAlert(true);
     }
   };
 
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
-      <Card border="dark" style={{ width: "35rem" }}>
-        <Card.Header
-          className="text-center"
-          style={{
-            background: "transparent",
-            borderBottom: "0",
-            fontSize: "24px",
-            marginTop: "10px",
-          }}
-        >
-          Login
-        </Card.Header>
-
-        <Card.Body>
-          <Form
-            onSubmit={(e) => handleLogar(e)}
-            style={{ alignItems: "center" }}
+      <div>
+        {showAlert && (
+          <Alert
+            variant="danger"
+            onClose={() => setShowAlert(false)}
+            dismissible
           >
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalEmail"
-            >
-              <Form.Label column sm={12}>
-                Email
-              </Form.Label>
-              <Col sm={12}>
-                <Form.Control
-                  value={email}
-                  type="email"
-                  placeholder="Email"
-                  required
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                />
-              </Col>
-            </Form.Group>
+            Usuário ou senha inválidos!
+          </Alert>
+        )}
 
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalSenha"
-            >
-              <Form.Label column sm={12}>
-                Senha
-              </Form.Label>
-              <Col sm={12}>
-                <Form.Control
-                  value={senha}
-                  type={mostrarSenha ? "text" : "password"}
-                  placeholder="Senha"
-                  required
-                  onChange={(e) => {
-                    setSenha(e.target.value);
-                  }}
-                />
-                <Button
-                  variant="link"
-                  onClick={handleMostrarSenha}
-                  style={{ position: "absolute", right: "10px", top: "54.5%" }}
-                >
-                  {mostrarSenha ? <EyeSlash /> : <Eye />}
-                </Button>
-              </Col>
-            </Form.Group>
+        <Card border="dark" style={{ width: "35rem" }}>
+          <Card.Header
+            className="text-center"
+            style={{
+              background: "transparent",
+              borderBottom: "0",
+              fontSize: "24px",
+              marginTop: "10px",
+            }}
+          >
+            Login
+          </Card.Header>
 
-            <Form.Check
-              type="switch"
-              id="custom-switch"
-              label="Lembrar-se"
-              checked={lembrar}
-              onChange={handleLembrar}
-            />
-
-            <Form.Group as={Row} className="mb-3">
-              <Col sm={{ span: 12, offset: 0 }} className="text-center">
-                <Button variant="dark" size="sm" type="submit">
-                  Logar
-                </Button>
-              </Col>
-            </Form.Group>
-          </Form>
-          {showAlert && (
-            <Alert
-              variant="danger"
-              onClose={() => setShowAlert(false)}
-              dismissible
+          <Card.Body>
+            <Form
+              onSubmit={(e) => handleLogar(e)}
+              style={{ alignItems: "center" }}
             >
-              Usuário ou senha inválidos!
-            </Alert>
-          )}
-        </Card.Body>
-        <Card.Footer
-          className="text-center"
-          style={{ background: "transparent", borderTop: "0" }}
-        >
-          <Card.Text>
-            Não possui cadastro?{" "}
-            <Link to="/cadastro" style={{ color: "blue", marginLeft: "5px" }}>
-              Cadastre-se
-            </Link>
-          </Card.Text>
-        </Card.Footer>
-      </Card>
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalLogin"
+              >
+                <Form.Label column sm={12}>
+                  Login
+                </Form.Label>
+                <Col sm={12}>
+                  <Form.Control
+                    value={login}
+                    type="email"
+                    placeholder="Login"
+                    required
+                    onChange={(e) => {
+                      setLogin(e.target.value);
+                    }}
+                  />
+                </Col>
+              </Form.Group>
+
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalSenha"
+              >
+                <Form.Label column sm={12}>
+                  Senha
+                </Form.Label>
+                <Col sm={12}>
+                  <Form.Control
+                    value={senha}
+                    type={mostrarSenha ? "text" : "password"}
+                    placeholder="Senha"
+                    required
+                    onChange={(e) => {
+                      setSenha(e.target.value);
+                    }}
+                  />
+                  <Button
+                    variant="link"
+                    onClick={handleMostrarSenha}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "54.5%",
+                    }}
+                  >
+                    {mostrarSenha ? <EyeSlash /> : <Eye />}
+                  </Button>
+                </Col>
+              </Form.Group>
+
+              <Form.Check
+                type="switch"
+                id="custom-switch"
+                label="Lembrar-se"
+                checked={lembrar}
+                onChange={handleLembrar}
+              />
+
+              <Form.Group as={Row} className="mb-3">
+                <Col sm={{ span: 12, offset: 0 }} className="text-center">
+                  <Button variant="dark" size="sm" type="submit">
+                    Logar
+                  </Button>
+                </Col>
+              </Form.Group>
+            </Form>
+          </Card.Body>
+          <Card.Footer
+            className="text-center"
+            style={{ background: "transparent", borderTop: "0" }}
+          >
+            <Card.Text>
+              Não possui cadastro?{" "}
+              <Link to="/cadastro" style={{ color: "blue", marginLeft: "5px" }}>
+                Cadastre-se
+              </Link>
+            </Card.Text>
+          </Card.Footer>
+        </Card>
+      </div>
     </Container>
   );
 };

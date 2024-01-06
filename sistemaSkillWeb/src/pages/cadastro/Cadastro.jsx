@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 import { Eye, EyeSlash } from "react-bootstrap-icons";
+import Alert from "react-bootstrap/Alert";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
@@ -24,6 +25,7 @@ const Cadastro = () => {
     setLogin,
   } = useContext(SistemaSkillContext);
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [showAlertCadastro, setShowAlertCadastro] = useState(false);
   const navigate = useNavigate();
 
   const handleMostrarSenha = () => {
@@ -34,7 +36,10 @@ const Cadastro = () => {
     e.preventDefault();
 
     if (senha !== confirmarSenha) {
-      alert("A senha e a confirmação de senha não coincidem.");
+      setShowAlertCadastro({
+        variant: "danger",
+        message: "Verifique se senha e confirmação de Senha são iguais",
+      });
       return;
     }
 
@@ -47,7 +52,6 @@ const Cadastro = () => {
 
       await api.post("/usuarios", novoCadastro);
 
-      alert("Usuário cadastrado com sucesso!");
       navigate("/");
       setLogin("");
       setSenha("");
@@ -56,6 +60,10 @@ const Cadastro = () => {
       getUsuarios();
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
+      setShowAlertCadastro({
+        variant: "danger",
+        message: "Erro ao cadastrar usuário. Tente novamente.",
+      });
     }
   };
 
@@ -77,137 +85,158 @@ const Cadastro = () => {
 
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
-      <Card border="dark" style={{ width: "35rem" }}>
-        <Card.Header
-          className="text-center"
-          style={{
-            background: "transparent",
-            borderBottom: "0",
-            fontSize: "24px",
-            marginTop: "10px",
-          }}
-        >
-          Cadastro
-        </Card.Header>
+      <div>
+        {showAlertCadastro && (
+          <Alert
+            variant="danger"
+            onClose={() => setShowAlertCadastro(false)}
+            dismissible
+          >
+            {showAlertCadastro.message}
+          </Alert>
+        )}
 
-        <Card.Body style={{ alignItems: "center" }}>
-          <Form onSubmit={handleCadastrar}>
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalNome"
+        <Card border="dark" style={{ width: "35rem" }}>
+          <Card.Header
+            className="text-center"
+            style={{
+              background: "transparent",
+              borderBottom: "0",
+              fontSize: "24px",
+              marginTop: "10px",
+            }}
+          >
+            Cadastro
+          </Card.Header>
+
+          <Card.Body style={{ alignItems: "center" }}>
+            <Form onSubmit={handleCadastrar}>
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalNome"
+              >
+                <Form.Label column sm={12}>
+                  Nome
+                </Form.Label>
+                <Col sm={12}>
+                  <Form.Control
+                    required
+                    onChange={handleChangeNome}
+                    type="text"
+                    placeholder="Nome"
+                  />
+                </Col>
+              </Form.Group>
+
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalLogin"
+              >
+                <Form.Label column sm={12}>
+                  Email
+                </Form.Label>
+                <Col sm={12}>
+                  <Form.Control
+                    required
+                    onChange={handleChangeLogin}
+                    type="email"
+                    placeholder="Email"
+                  />
+                </Col>
+              </Form.Group>
+
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalSenha"
+              >
+                <Form.Label column sm={12}>
+                  Senha
+                </Form.Label>
+                <Col sm={12}>
+                  <Form.Control
+                    required
+                    onChange={handleChangeSenha}
+                    type={mostrarSenha ? "text" : "password"}
+                    placeholder="Senha"
+                  />
+                  <Button
+                    variant="link"
+                    onClick={handleMostrarSenha}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "55.5%",
+                    }}
+                  >
+                    {mostrarSenha ? <EyeSlash /> : <Eye />}
+                  </Button>
+                </Col>
+              </Form.Group>
+
+              <Form.Group
+                as={Row}
+                className="mb-3"
+                controlId="formHorizontalConfirmarSenha"
+              >
+                <Form.Label column sm={12}>
+                  Confirmar Senha
+                </Form.Label>
+                <Col sm={12}>
+                  <Form.Control
+                    required
+                    onChange={handleChangeConfirmarSenha}
+                    type={mostrarSenha ? "text" : "password"}
+                    placeholder="Confirmar Senha"
+                  />
+                  <Button
+                    variant="link"
+                    onClick={handleMostrarSenha}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "72%",
+                    }}
+                  >
+                    {mostrarSenha ? <EyeSlash /> : <Eye />}
+                  </Button>
+                </Col>
+              </Form.Group>
+
+              <Form.Group as={Row} className="mb-3">
+                <Col sm={{ span: 12, offset: 0 }} className="text-center">
+                  <Button variant="dark" size="sm" type="submit">
+                    Cadastrar
+                  </Button>
+                </Col>
+              </Form.Group>
+            </Form>
+            {/* {showAlertCadastro && (
+            <Alert
+              variant="danger"
+              onClose={() => setShowAlertCadastro(false)}
+              dismissible
             >
-              <Form.Label column sm={12}>
-                Nome
-              </Form.Label>
-              <Col sm={12}>
-                <Form.Control
-                  required
-                  onChange={handleChangeNome}
-                  type="text"
-                  placeholder="Nome"
-                />
-              </Col>
-            </Form.Group>
+              Usuário ou senha inválidos!
+            </Alert>
+          )} */}
+          </Card.Body>
 
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalLogin"
-            >
-              <Form.Label column sm={12}>
-                Email
-              </Form.Label>
-              <Col sm={12}>
-                <Form.Control
-                  required
-                  onChange={handleChangeLogin}
-                  type="email"
-                  placeholder="Email"
-                />
-              </Col>
-            </Form.Group>
-
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalSenha"
-            >
-              <Form.Label column sm={12}>
-                Senha
-              </Form.Label>
-              <Col sm={12}>
-                <Form.Control
-                  required
-                  onChange={handleChangeSenha}
-                  type={mostrarSenha ? "text" : "password"}
-                  placeholder="Senha"
-                />
-                <Button
-                  variant="link"
-                  onClick={handleMostrarSenha}
-                  style={{
-                    position: "absolute",
-                    right: "10px",
-                    top: "55.5%",
-                  }}
-                >
-                  {mostrarSenha ? <EyeSlash /> : <Eye />}
-                </Button>
-              </Col>
-            </Form.Group>
-
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formHorizontalConfirmarSenha"
-            >
-              <Form.Label column sm={12}>
-                Confirmar Senha
-              </Form.Label>
-              <Col sm={12}>
-                <Form.Control
-                  required
-                  onChange={handleChangeConfirmarSenha}
-                  type={mostrarSenha ? "text" : "password"}
-                  placeholder="Confirmar Senha"
-                />
-                <Button
-                  variant="link"
-                  onClick={handleMostrarSenha}
-                  style={{
-                    position: "absolute",
-                    right: "10px",
-                    top: "72%",
-                  }}
-                >
-                  {mostrarSenha ? <EyeSlash /> : <Eye />}
-                </Button>
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} className="mb-3">
-              <Col sm={{ span: 12, offset: 0 }} className="text-center">
-                <Button variant="dark" size="sm" type="submit">
-                  Cadastrar
-                </Button>
-              </Col>
-            </Form.Group>
-          </Form>
-        </Card.Body>
-
-        <Card.Footer
-          className="text-center"
-          style={{ background: "transparent", borderTop: "0" }}
-        >
-          <Card.Text>
-            Já possui cadastro?{" "}
-            <Link to="/login" style={{ color: "blue", marginLeft: "5px" }}>
-              Logar-se
-            </Link>
-          </Card.Text>
-        </Card.Footer>
-      </Card>
+          <Card.Footer
+            className="text-center"
+            style={{ background: "transparent", borderTop: "0" }}
+          >
+            <Card.Text>
+              Já possui cadastro?{" "}
+              <Link to="/login" style={{ color: "blue", marginLeft: "5px" }}>
+                Logar-se
+              </Link>
+            </Card.Text>
+          </Card.Footer>
+        </Card>
+      </div>
     </Container>
   );
 };
