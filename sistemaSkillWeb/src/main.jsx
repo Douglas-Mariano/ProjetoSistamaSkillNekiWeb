@@ -22,8 +22,8 @@ const router = createBrowserRouter([
         element: <Cadastro />,
       },
       {
-        path: '/home',
-        element: <Home />,
+        path: "/home",
+        element: <PrivateRoute element={<Home />} />,
       },
     ],
   },

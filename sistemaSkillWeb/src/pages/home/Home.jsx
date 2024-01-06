@@ -1,6 +1,4 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
@@ -10,25 +8,79 @@ import { api } from "../../api/api";
 import SkillModal from "../../components/SkillModal";
 
 const Home = () => {
-  const [level, setLevel] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [usuarioData, setUsuarioData] = useState(null);
+  const [novaSkill, setNovaSkill] = useState({
+    level: 0,
+    skills: {
+      id: 0,
+    },
+  });
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  const handleAddSkill = (newSkillLevel) => {
-    console.log(`Nova Skill Level: ${newSkillLevel}`);
-    handleCloseModal();
+  const handleAdicionarSkill = async () => {
+    const token = localStorage.getItem("token");
+    const idUsuario = localStorage.getItem("idUsuario");
+
+    try {
+      await api.post(`/skillsUsuario`, novaSkill, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+
+      console.log("Nova habilidade adicionada com sucesso.");
+
+      const updatedUsuarioData = await api.get(`/usuarios/${idUsuario}`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+
+      setUsuarioData(updatedUsuarioData.data);
+
+      setNovaSkill({
+        level: 0,
+        skills: {
+          id: 0,
+        },
+      });
+
+      handleCloseModal();
+    } catch (error) {
+      console.error("Erro ao adicionar a nova habilidade:", error);
+    }
   };
 
-  const handleIncreaseLevel = () => {
-    setLevel(level + 1);
-  };
+  const handleUpdateSkillLevel = async (skillId, newLevel) => {
+    const token = localStorage.getItem("token");
 
-  const handleDecreaseLevel = () => {
-    if (level > 0) {
-      setLevel(level - 1);
+    try {
+      const updatedUserData = { ...usuarioData };
+      const updatedSkills = updatedUserData.skills.map((skill) => {
+        if (skill.id === skillId) {
+          return { ...skill, level: newLevel };
+        }
+        return skill;
+      });
+      updatedUserData.skills = updatedSkills;
+      setUsuarioData(updatedUserData);
+
+      await api.put(
+        `/skillsUsuario/${skillId}`,
+        { level: newLevel },
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+
+      console.log("Nível da habilidade atualizado com sucesso.");
+    } catch (error) {
+      console.error("Erro ao atualizar o nível da habilidade:", error);
     }
   };
 
@@ -132,14 +184,18 @@ const Home = () => {
                   <ButtonGroup>
                     <Button
                       className="btn btn-sm btn-success"
-                      onClick={handleIncreaseLevel}
+                      onClick={() =>
+                        handleUpdateSkillLevel(skill.id, skill.level + 1)
+                      }
                     >
                       {" "}
                       +{" "}
                     </Button>
                     <Button
                       className="btn btn-sm btn-danger"
-                      onClick={handleDecreaseLevel}
+                      onClick={() =>
+                        handleUpdateSkillLevel(skill.id, skill.level - 1)
+                      }
                     >
                       {" "}
                       -{" "}
@@ -160,10 +216,13 @@ const Home = () => {
       </Table>
 
       <SkillModal
-        showModal={showModal}
-        handleCloseModal={handleCloseModal}
-        handleAddSkill={handleAddSkill}
-      />
+  showModal={showModal}
+  handleCloseModal={handleCloseModal}
+  handleAdicionarSkill={handleAdicionarSkill}
+  novaSkill={novaSkill}
+  setNovaSkill={setNovaSkill}
+  usuarioSkills={usuarioData ? usuarioData.skills.map((skill) => skill.skills.id) : []}
+/>
     </Container>
   );
 };

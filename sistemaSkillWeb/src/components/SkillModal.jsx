@@ -1,12 +1,67 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import { api } from "../api/api";
 
-const SkillModal = ({ showModal, handleCloseModal, handleAddSkill }) => {
-  const [level, setLevel] = useState(0);
+const SkillModal = ({
+  showModal,
+  handleCloseModal,
+  handleAdicionarSkill,
+  novaSkill,
+  setNovaSkill,
+}) => {
+  const [skills, setSkills] = useState([]);
+  const [selectedSkillId, setSelectedSkillId] = useState(null);
+  const [level, setLevel] = useState(novaSkill.level);
+
+  const limparFormulario = () => {
+    setSelectedSkillId(null);
+    setLevel("");
+    setNovaSkill({ ...novaSkill, level: "", skills: { id: null } });
+  };
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await api.get("/skills", {
+          headers: {
+            Authorization: `${token}`,
+          },
+        });
+
+        setSkills(response.data);
+        if (!selectedSkillId && response.data.length > 0) {
+          const firstSkillId = response.data[0].id;
+          setSelectedSkillId(firstSkillId);
+          setNovaSkill({ ...novaSkill, skills: { id: firstSkillId } });
+        }
+      } catch (error) {
+        console.error("Erro ao obter a lista de skills:", error);
+      }
+    };
+
+    if (showModal) {
+      limparFormulario();
+      fetchSkills();
+    }
+  }, [showModal]);
+
+  const handleLevelChange = (e) => {
+    const newLevel = e.target.value;
+    setLevel(newLevel);
+    setNovaSkill({ ...novaSkill, level: newLevel });
+  };
+
+  const handleSkillChange = (e) => {
+    const selectedId = e.target.value;
+    setSelectedSkillId(selectedId);
+    setNovaSkill({ ...novaSkill, skills: { id: selectedId } });
+  };
 
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
@@ -15,9 +70,13 @@ const SkillModal = ({ showModal, handleCloseModal, handleAddSkill }) => {
       </Modal.Header>
       <Modal.Body>
         <Form.Group controlId="formGridState">
-          <Form.Label>Skills:</Form.Label>
-          <Form.Select defaultValue="Choose...">
-            <option>Choose...</option>
+          <Form.Label>Skills</Form.Label>
+          <Form.Select defaultValue="..." onChange={handleSkillChange}>
+            {skills.map((skill) => (
+              <option key={skill.id} value={skill.id}>
+                {skill.nome}
+              </option>
+            ))}
           </Form.Select>
         </Form.Group>
         <Form.Group as={Row} controlId="formGridCity">
@@ -25,7 +84,11 @@ const SkillModal = ({ showModal, handleCloseModal, handleAddSkill }) => {
             Level
           </Form.Label>
           <Col sm="3">
-            <Form.Control type="number" onChange={(e) => setLevel(e.target.value)} />
+            <Form.Control
+              type="number"
+              value={level}
+              onChange={handleLevelChange}
+            />
           </Col>
         </Form.Group>
       </Modal.Body>
@@ -33,7 +96,7 @@ const SkillModal = ({ showModal, handleCloseModal, handleAddSkill }) => {
         <Button variant="secondary" onClick={handleCloseModal}>
           Fechar
         </Button>
-        <Button variant="primary" onClick={() => handleAddSkill(level)}>
+        <Button variant="primary" onClick={() => { handleAdicionarSkill(); limparFormulario(); }}>
           Salvar
         </Button>
       </Modal.Footer>
