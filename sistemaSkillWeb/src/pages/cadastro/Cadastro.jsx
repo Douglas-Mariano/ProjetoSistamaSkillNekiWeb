@@ -12,8 +12,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { SistemaSkillContext } from "../../context/SistemaSkillContext";
 import { api } from "../../api/api";
+import { useTheme } from "../../context/ThemeContext";
 
 const Cadastro = () => {
+  const theme = useTheme();
   const {
     nome,
     setNome,
@@ -96,11 +98,10 @@ const Cadastro = () => {
           </Alert>
         )}
 
-        <Card border="dark" style={{ width: "35rem" }}>
+        <Card border="dark" style={{ width: "35rem", backgroundColor: theme.color5 }}>
           <Card.Header
             className="text-center"
             style={{
-              background: "transparent",
               borderBottom: "0",
               fontSize: "24px",
               marginTop: "10px",
@@ -213,20 +214,11 @@ const Cadastro = () => {
                 </Col>
               </Form.Group>
             </Form>
-            {/* {showAlertCadastro && (
-            <Alert
-              variant="danger"
-              onClose={() => setShowAlertCadastro(false)}
-              dismissible
-            >
-              Usuário ou senha inválidos!
-            </Alert>
-          )} */}
           </Card.Body>
 
           <Card.Footer
             className="text-center"
-            style={{ background: "transparent", borderTop: "0" }}
+            style={{ borderTop: "0" }}
           >
             <Card.Text>
               Já possui cadastro?{" "}

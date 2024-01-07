@@ -6,6 +6,8 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
 import SkillModal from "../../components/SkillModal";
+import { IoTrashBinSharp } from "react-icons/io5";
+import { BsFileArrowUp, BsFileArrowDown } from "react-icons/bs";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
@@ -153,12 +155,14 @@ const Home = () => {
           </div>
         </div>
       )}
-
+      
       <Table
         striped
         bordered
         hover
-        size="lg"
+        responsive
+        size="sm"
+        variant="secondary"
         className="w-100 overflow-auto mt-5"
       >
         <thead>
@@ -171,8 +175,25 @@ const Home = () => {
               Lista de Skills
             </th>
           </tr>
+          <tr>
+            <th className="text-center" style={{ fontSize: "16px", minWidth: "300px" }}>
+              Imagem
+            </th>
+            <th className="text-center" style={{ fontSize: "16px", minWidth: "250px" }}>
+              Nome
+            </th>
+            <th className="text-center" style={{ fontSize: "16px", minWidth: "600px" }}>
+              Descrição
+            </th>
+            <th className="text-center" style={{ fontSize: "16px", minWidth: "75px" }}>
+              Nivel
+            </th>
+            <th className="text-center" style={{ fontSize: "16px", minWidth: "50px" }}>
+              Ação
+            </th>
+          </tr>
         </thead>
-        <tbody>
+        <tbody className="text-center">
           {usuarioData &&
             usuarioData.skills.map((skill) => (
               <tr key={skill.id}>
@@ -180,35 +201,25 @@ const Home = () => {
                 <td>{skill.skills.nome}</td>
                 <td>{skill.skills.descricao}</td>
                 <td className="d-flex justify-content-between align-items-center">
+                  <BsFileArrowUp
+                    onClick={() =>
+                      handleUpdateSkillLevel(skill.id, skill.level + 1)
+                    }
+                    size={25}
+                  />
                   <span>{skill.level}</span>
-                  <ButtonGroup>
-                    <Button
-                      className="btn btn-sm btn-success"
-                      onClick={() =>
-                        handleUpdateSkillLevel(skill.id, skill.level + 1)
-                      }
-                    >
-                      {" "}
-                      +{" "}
-                    </Button>
-                    <Button
-                      className="btn btn-sm btn-danger"
-                      onClick={() =>
-                        handleUpdateSkillLevel(skill.id, skill.level - 1)
-                      }
-                    >
-                      {" "}
-                      -{" "}
-                    </Button>
-                  </ButtonGroup>
+                  <BsFileArrowDown
+                    onClick={() =>
+                      handleUpdateSkillLevel(skill.id, skill.level - 1)
+                    }
+                    size={25}
+                  />
                 </td>
-                <td>
-                  <Button
-                    className="btn btn-sm btn-danger"
+                <td style={{ color: "red", paddingLeft: "11px" }}>
+                  <IoTrashBinSharp
+                    size={25}
                     onClick={() => handleDeleteSkill(skill.id)}
-                  >
-                    Excluir
-                  </Button>
+                  />
                 </td>
               </tr>
             ))}
@@ -216,13 +227,15 @@ const Home = () => {
       </Table>
 
       <SkillModal
-  showModal={showModal}
-  handleCloseModal={handleCloseModal}
-  handleAdicionarSkill={handleAdicionarSkill}
-  novaSkill={novaSkill}
-  setNovaSkill={setNovaSkill}
-  usuarioSkills={usuarioData ? usuarioData.skills.map((skill) => skill.skills.id) : []}
-/>
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        handleAdicionarSkill={handleAdicionarSkill}
+        novaSkill={novaSkill}
+        setNovaSkill={setNovaSkill}
+        usuarioSkills={
+          usuarioData ? usuarioData.skills.map((skill) => skill.skills.id) : []
+        }
+      />
     </Container>
   );
 };

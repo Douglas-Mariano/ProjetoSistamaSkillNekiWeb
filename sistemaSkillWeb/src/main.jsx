@@ -7,6 +7,9 @@ import Home from './pages/home/Home.jsx';
 import { SkillProvider } from './context/SistemaSkillContext.jsx';
 import { ChakraProvider } from '@chakra-ui/react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import PrivateRoute from './routes/PrivateRoute.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
+
 
 const router = createBrowserRouter([
   {
@@ -35,8 +38,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <SkillProvider>
-    <ChakraProvider>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <ThemeProvider>
+      <ChakraProvider>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </ThemeProvider>
   </SkillProvider>
 );

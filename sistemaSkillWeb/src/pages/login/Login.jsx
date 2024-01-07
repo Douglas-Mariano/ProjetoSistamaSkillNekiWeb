@@ -12,8 +12,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { SistemaSkillContext } from "../../context/SistemaSkillContext";
 import { api } from "../../api/api";
+import { useTheme } from "../../context/ThemeContext";
 
 const Login = () => {
+  const theme = useTheme();
   const {
     login,
     setLogin,
@@ -34,8 +36,11 @@ const Login = () => {
       setLogin(storedLogin);
       setSenha(storedSenha);
       setLembrar(true);
+    }else {
+      setLogin("");
+      setSenha("");
     }
-  }, []);
+  }, [setLogin, setSenha]);
 
   const handleMostrarSenha = () => {
     setMostrarSenha(!mostrarSenha);
@@ -91,14 +96,13 @@ const Login = () => {
           </Alert>
         )}
 
-        <Card border="dark" style={{ width: "35rem" }}>
+        <Card border="dark" style={{ width: "35rem", backgroundColor: theme.color5 }}>
           <Card.Header
             className="text-center"
             style={{
-              background: "transparent",
               borderBottom: "0",
               fontSize: "24px",
-              marginTop: "10px",
+              paddingTop: "10px",
             }}
           >
             Login
@@ -181,7 +185,7 @@ const Login = () => {
           </Card.Body>
           <Card.Footer
             className="text-center"
-            style={{ background: "transparent", borderTop: "0" }}
+            style={{ borderTop: "0" }}
           >
             <Card.Text>
               Não possui cadastro?{" "}
