@@ -15,6 +15,13 @@ const ThemeProvider = ({ children }) => {
     color5: "#D9D9D9",
     color6: "#F6FCFF",
     color7: "#EAEAEA",
+    darkBackground: "#333333",
+    primaryColor: "#555555",
+    secondaryColor: "#888888",
+    highlightColor: "#aaaaaa",
+    lightBackground: "#ffffff",
+    lightHighlight: "#dddddd",
+    borderSeparator: "#cccccc",
   };
 
   return (

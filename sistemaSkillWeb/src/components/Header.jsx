@@ -13,17 +13,16 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("idUsuario");
-
     navigate("/");
   };
 
   return (
     <div
       style={{
-        backgroundColor: theme.color1,
+        backgroundColor: theme.darkBackground,
         paddingBottom: "15px",
         fontWeight: "bold",
-        color: theme.color6,
+        color: theme.lightHighlight,
         width: "100%",
         minHeight: "10vh",
         display: "flex",
@@ -40,9 +39,12 @@ const Header = () => {
           style={{ marginRight: "10px", width: "30px" }}
         />
       </div>
-      <div style={{ display: "flex", alignItems: "center" }}></div>
       <div>
-        <Link onClick={handleLogout}>
+        <Link
+          to="#"
+          onClick={handleLogout}
+          style={{ color: theme.lightHighlight }}
+        >
           <SlLogout size={20} />
         </Link>
       </div>

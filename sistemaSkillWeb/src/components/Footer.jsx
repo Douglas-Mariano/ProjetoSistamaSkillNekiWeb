@@ -11,13 +11,18 @@ import { useTheme } from "../context/ThemeContext";
 const Footer = () => {
   const theme = useTheme();
 
+  const iconStyle = {
+    margin: "0 10px",
+    color: theme.lightHighlight,
+  };
+
   return (
     <div
       style={{
-        backgroundColor: theme.color1,
+        backgroundColor: theme.darkBackground,
         paddingBottom: "10px",
         fontWeight: "bold",
-        color: theme.color6,
+        color: theme.lightHighlight,
         width: "100%",
         minHeight: "10vh",
         display: "flex",
@@ -32,24 +37,30 @@ const Footer = () => {
                 display: "flex",
                 justifyContent: "space-evenly",
                 paddingTop: "22px",
-                paddingRight: "80px",
               }}
             >
-              <h4 style={{ paddingTop: "" }}>Links do Projeto</h4>
-              <Link
-                to={
-                  "https://github.com/tiktoneli/projeto-Final-Web-Dev-Grupo-3"
-                }
-                target={"_blank"}
+              <h4>Links do Projeto</h4>
+              <a
+                href="https://github.com/Douglas-Mariano/ProjetoSistamaSkillNeki"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <DiJava size={40} />
-              </Link>
-              <Link to={"https://www.facebook.com"} target={"_blank"}>
-                <DiReact size={40} />
-              </Link>
-              <Link to={"https://www.instagram.com/"} target={"_blank"}>
-                <FaMobileAlt size={30} />
-              </Link>
+                <DiJava size={40} style={iconStyle} />
+              </a>
+              <a
+                href="https://github.com/Douglas-Mariano/ProjetoSistamaSkillNekiWeb"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <DiReact size={40} style={iconStyle} />
+              </a>
+              <a
+                href="https://github.com/Douglas-Mariano/ProjetoSistamaSkillNekiMobile"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaMobileAlt size={30} style={iconStyle} />
+              </a>
             </div>
           </Col>
           <Col md={4}>
@@ -58,19 +69,23 @@ const Footer = () => {
                 display: "flex",
                 justifyContent: "space-evenly",
                 paddingTop: "22px",
-                paddingRight: "80px",
               }}
             >
-              <h4 style={{ paddingTop: "" }}>Redes Sociais</h4>
-              <Link
-                to={"https://www.linkedin.com/in/dgmariano"}
-                target={"_blank"}
+              <h4>Redes Sociais</h4>
+              <a
+                href="https://www.linkedin.com/in/dgmariano"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <BsLinkedin size={30} />
-              </Link>
-              <Link to={"https://github.com/Douglas-Mariano"} target={"_blank"}>
-                <BsGithub size={30} />
-              </Link>
+                <BsLinkedin size={30} style={iconStyle} />
+              </a>
+              <a
+                href="https://github.com/Douglas-Mariano"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <BsGithub size={30} style={iconStyle} />
+              </a>
             </div>
           </Col>
         </Row>

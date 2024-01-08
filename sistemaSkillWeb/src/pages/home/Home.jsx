@@ -2,7 +2,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
 import SkillModal from "../../components/SkillModal";
@@ -32,8 +31,6 @@ const Home = () => {
           Authorization: `${token}`,
         },
       });
-
-      console.log("Nova habilidade adicionada com sucesso.");
 
       const updatedUsuarioData = await api.get(`/usuarios/${idUsuario}`, {
         headers: {
@@ -79,8 +76,6 @@ const Home = () => {
           },
         }
       );
-
-      console.log("Nível da habilidade atualizado com sucesso.");
     } catch (error) {
       console.error("Erro ao atualizar o nível da habilidade:", error);
     }
@@ -96,8 +91,6 @@ const Home = () => {
           Authorization: `${token}`,
         },
       });
-
-      console.log("Habilidade excluída com sucesso.");
 
       const updatedUserData = await api.get(`/usuarios/${idUsuario}`, {
         headers: {
@@ -155,7 +148,7 @@ const Home = () => {
           </div>
         </div>
       )}
-      
+
       <Table
         striped
         bordered
@@ -176,19 +169,34 @@ const Home = () => {
             </th>
           </tr>
           <tr>
-            <th className="text-center" style={{ fontSize: "16px", minWidth: "300px" }}>
+            <th
+              className="text-center"
+              style={{ fontSize: "16px", minWidth: "300px" }}
+            >
               Imagem
             </th>
-            <th className="text-center" style={{ fontSize: "16px", minWidth: "250px" }}>
+            <th
+              className="text-center"
+              style={{ fontSize: "16px", minWidth: "250px" }}
+            >
               Nome
             </th>
-            <th className="text-center" style={{ fontSize: "16px", minWidth: "600px" }}>
+            <th
+              className="text-center"
+              style={{ fontSize: "16px", minWidth: "600px" }}
+            >
               Descrição
             </th>
-            <th className="text-center" style={{ fontSize: "16px", minWidth: "75px" }}>
+            <th
+              className="text-center"
+              style={{ fontSize: "16px", minWidth: "75px" }}
+            >
               Nivel
             </th>
-            <th className="text-center" style={{ fontSize: "16px", minWidth: "50px" }}>
+            <th
+              className="text-center"
+              style={{ fontSize: "16px", minWidth: "50px" }}
+            >
               Ação
             </th>
           </tr>

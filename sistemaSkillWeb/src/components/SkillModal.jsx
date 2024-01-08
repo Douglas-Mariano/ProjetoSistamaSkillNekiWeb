@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { api } from "../api/api";
+import { useTheme } from "../context/ThemeContext";
 
 const SkillModal = ({
   showModal,
@@ -13,6 +14,7 @@ const SkillModal = ({
   novaSkill,
   setNovaSkill,
 }) => {
+  const theme = useTheme();
   const [skills, setSkills] = useState([]);
   const [selectedSkillId, setSelectedSkillId] = useState(null);
   const [level, setLevel] = useState(novaSkill.level);
@@ -27,7 +29,6 @@ const SkillModal = ({
     const fetchSkills = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const response = await api.get("/skills", {
           headers: {
             Authorization: `${token}`,
@@ -65,13 +66,30 @@ const SkillModal = ({
 
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
-      <Modal.Header>
+      <Modal.Header
+        style={{
+          backgroundColor: theme.darkBackground,
+          color: theme.lightHighlight,
+        }}
+      >
         <Modal.Title>Cadastro de Skill</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body
+        style={{
+          backgroundColor: theme.darkBackground,
+          color: theme.lightHighlight,
+        }}
+      >
         <Form.Group controlId="formGridState">
           <Form.Label>Skills</Form.Label>
-          <Form.Select defaultValue="..." onChange={handleSkillChange}>
+          <Form.Select
+            defaultValue="..."
+            onChange={handleSkillChange}
+            style={{
+              backgroundColor: theme.lightBackground,
+              color: theme.darkBackground,
+            }}
+          >
             {skills.map((skill) => (
               <option key={skill.id} value={skill.id}>
                 {skill.nome}
@@ -88,15 +106,25 @@ const SkillModal = ({
               type="number"
               value={level}
               onChange={handleLevelChange}
+              style={{
+                backgroundColor: theme.lightBackground,
+                color: theme.darkBackground,
+              }}
             />
           </Col>
         </Form.Group>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ backgroundColor: theme.darkBackground }}>
         <Button variant="secondary" onClick={handleCloseModal}>
           Fechar
         </Button>
-        <Button variant="primary" onClick={() => { handleAdicionarSkill(); limparFormulario(); }}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            handleAdicionarSkill();
+            limparFormulario();
+          }}
+        >
           Salvar
         </Button>
       </Modal.Footer>

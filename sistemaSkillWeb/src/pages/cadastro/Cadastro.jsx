@@ -1,15 +1,14 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
+import React, { useState, useEffect } from "react";
+import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import Card from "react-bootstrap/Card";
 import { Eye, EyeSlash } from "react-bootstrap-icons";
-import Alert from "react-bootstrap/Alert";
-
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { SistemaSkillContext } from "../../context/SistemaSkillContext";
 import { api } from "../../api/api";
 import { useTheme } from "../../context/ThemeContext";
@@ -59,7 +58,6 @@ const Cadastro = () => {
       setSenha("");
       setConfirmarSenha("");
       setNome("");
-      //getUsuarios();
     } catch (error) {
       console.error("Erro ao cadastrar usuário:", error);
       setShowAlertCadastro({
@@ -98,7 +96,14 @@ const Cadastro = () => {
           </Alert>
         )}
 
-        <Card border="dark" style={{ width: "35rem", backgroundColor: theme.color5 }}>
+        <Card
+          border="dark"
+          style={{
+            width: "35rem",
+            backgroundColor: theme.darkBackground,
+            color: theme.lightHighlight,
+          }}
+        >
           <Card.Header
             className="text-center"
             style={{
@@ -126,6 +131,10 @@ const Cadastro = () => {
                     onChange={handleChangeNome}
                     type="text"
                     placeholder="Nome"
+                    style={{
+                      backgroundColor: theme.lightHighlight,
+                      color: theme.darkBackground,
+                    }}
                   />
                 </Col>
               </Form.Group>
@@ -144,6 +153,10 @@ const Cadastro = () => {
                     onChange={handleChangeLogin}
                     type="email"
                     placeholder="Email"
+                    style={{
+                      backgroundColor: theme.lightHighlight,
+                      color: theme.darkBackground,
+                    }}
                   />
                 </Col>
               </Form.Group>
@@ -162,6 +175,10 @@ const Cadastro = () => {
                     onChange={handleChangeSenha}
                     type={mostrarSenha ? "text" : "password"}
                     placeholder="Senha"
+                    style={{
+                      backgroundColor: theme.lightHighlight,
+                      color: theme.darkBackground,
+                    }}
                   />
                   <Button
                     variant="link"
@@ -170,6 +187,7 @@ const Cadastro = () => {
                       position: "absolute",
                       right: "10px",
                       top: "55.5%",
+                      color: theme.primaryColor,
                     }}
                   >
                     {mostrarSenha ? <EyeSlash /> : <Eye />}
@@ -191,6 +209,10 @@ const Cadastro = () => {
                     onChange={handleChangeConfirmarSenha}
                     type={mostrarSenha ? "text" : "password"}
                     placeholder="Confirmar Senha"
+                    style={{
+                      backgroundColor: theme.lightHighlight,
+                      color: theme.darkBackground,
+                    }}
                   />
                   <Button
                     variant="link"
@@ -199,6 +221,7 @@ const Cadastro = () => {
                       position: "absolute",
                       right: "10px",
                       top: "72%",
+                      color: theme.primaryColor,
                     }}
                   >
                     {mostrarSenha ? <EyeSlash /> : <Eye />}
@@ -208,7 +231,7 @@ const Cadastro = () => {
 
               <Form.Group as={Row} className="mb-3">
                 <Col sm={{ span: 12, offset: 0 }} className="text-center">
-                  <Button variant="dark" size="sm" type="submit">
+                  <Button variant="secondary" size="sm" type="submit">
                     Cadastrar
                   </Button>
                 </Col>
@@ -216,13 +239,13 @@ const Cadastro = () => {
             </Form>
           </Card.Body>
 
-          <Card.Footer
-            className="text-center"
-            style={{ borderTop: "0" }}
-          >
+          <Card.Footer className="text-center" style={{ borderTop: "0" }}>
             <Card.Text>
               Já possui cadastro?{" "}
-              <Link to="/login" style={{ color: "blue", marginLeft: "5px" }}>
+              <Link
+                to="/login"
+                style={{ color: theme.lightBackground, marginLeft: "5px" }}
+              >
                 Logar-se
               </Link>
             </Card.Text>

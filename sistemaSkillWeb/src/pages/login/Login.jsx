@@ -36,7 +36,7 @@ const Login = () => {
       setLogin(storedLogin);
       setSenha(storedSenha);
       setLembrar(true);
-    }else {
+    } else {
       setLogin("");
       setSenha("");
     }
@@ -96,7 +96,10 @@ const Login = () => {
           </Alert>
         )}
 
-        <Card border="dark" style={{ width: "35rem", backgroundColor: theme.color5 }}>
+        <Card
+          border="dark"
+          style={{ width: "35rem", backgroundColor: theme.darkBackground, color: theme.lightHighlight }}
+        >
           <Card.Header
             className="text-center"
             style={{
@@ -130,6 +133,7 @@ const Login = () => {
                     onChange={(e) => {
                       setLogin(e.target.value);
                     }}
+                    style={{ backgroundColor: theme.lightHighlight, color: theme.darkBackground }}
                   />
                 </Col>
               </Form.Group>
@@ -151,6 +155,7 @@ const Login = () => {
                     onChange={(e) => {
                       setSenha(e.target.value);
                     }}
+                    style={{ backgroundColor: theme.lightHighlight, color: theme.darkBackground }}
                   />
                   <Button
                     variant="link"
@@ -159,6 +164,7 @@ const Login = () => {
                       position: "absolute",
                       right: "10px",
                       top: "54.5%",
+                      color: theme.primaryColor,
                     }}
                   >
                     {mostrarSenha ? <EyeSlash /> : <Eye />}
@@ -172,11 +178,12 @@ const Login = () => {
                 label="Lembrar-se"
                 checked={lembrar}
                 onChange={handleLembrar}
+                style={{ color: theme.lightHighlight }}
               />
 
               <Form.Group as={Row} className="mb-3">
                 <Col sm={{ span: 12, offset: 0 }} className="text-center">
-                  <Button variant="dark" size="sm" type="submit">
+                  <Button variant="secondary" size="sm" type="submit">
                     Logar
                   </Button>
                 </Col>
@@ -189,7 +196,7 @@ const Login = () => {
           >
             <Card.Text>
               Não possui cadastro?{" "}
-              <Link to="/cadastro" style={{ color: "blue", marginLeft: "5px" }}>
+              <Link to="/cadastro" style={{ color: theme.lightBackground, marginLeft: "5px" }}>
                 Cadastre-se
               </Link>
             </Card.Text>
@@ -199,4 +206,5 @@ const Login = () => {
     </Container>
   );
 };
+
 export default Login;
