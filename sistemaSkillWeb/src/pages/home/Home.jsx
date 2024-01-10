@@ -5,11 +5,18 @@ import Button from "react-bootstrap/Button";
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
 import SkillModal from "../../components/SkillModal";
-import { IoTrashBinSharp } from "react-icons/io5";
+import {
+  IoCheckmarkSharp,
+  IoCloseOutline,
+  IoTrashBinSharp,
+} from "react-icons/io5";
 import { BsFileArrowUp, BsFileArrowDown } from "react-icons/bs";
+import { Alert, Image } from "react-bootstrap";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [skillDelete, setSkillDelete] = useState(null);
   const [usuarioData, setUsuarioData] = useState(null);
   const [novaSkill, setNovaSkill] = useState({
     level: 0,
@@ -78,6 +85,23 @@ const Home = () => {
       );
     } catch (error) {
       console.error("Erro ao atualizar o nível da habilidade:", error);
+    }
+  };
+
+  const showConfirmacaoDelete = (skillId) => {
+    setSkillDelete(skillId);
+    setShowDeleteAlert(true);
+  };
+
+  const closeDeleteAlert = () => {
+    setShowDeleteAlert(false);
+    setSkillDelete(null);
+  };
+
+  const confirmDeleteSkill = () => {
+    if (skillDelete) {
+      handleDeleteSkill(skillDelete);
+      closeDeleteAlert();
     }
   };
 
@@ -156,7 +180,7 @@ const Home = () => {
         responsive
         size="sm"
         variant="secondary"
-        className="w-100 overflow-auto mt-5"
+        className="w-100 overflow-auto mt-5 align-items-center"
       >
         <thead>
           <tr>
@@ -169,15 +193,12 @@ const Home = () => {
             </th>
           </tr>
           <tr>
-            <th
-              className="text-center"
-              style={{ fontSize: "16px", minWidth: "300px" }}
-            >
+            <th className="text-center" style={{ fontSize: "16px" }}>
               Imagem
             </th>
             <th
               className="text-center"
-              style={{ fontSize: "16px", minWidth: "250px" }}
+              style={{ fontSize: "16px", minWidth: "200px" }}
             >
               Nome
             </th>
@@ -194,7 +215,7 @@ const Home = () => {
               Nivel
             </th>
             <th
-              className="text-center"
+              className="text-center align-items-center"
               style={{ fontSize: "16px", minWidth: "50px" }}
             >
               Ação
@@ -205,7 +226,14 @@ const Home = () => {
           {usuarioData &&
             usuarioData.skills.map((skill) => (
               <tr key={skill.id}>
-                <td>{/* Imagem */}</td>
+                <td>
+                  <Image
+                    src={skill.skills.imagem}
+                    alt={skill.skills.nome}
+                    fluid
+                    style={{ width: "100px" }}
+                  />
+                </td>
                 <td>{skill.skills.nome}</td>
                 <td>{skill.skills.descricao}</td>
                 <td className="d-flex justify-content-between align-items-center">
@@ -226,8 +254,27 @@ const Home = () => {
                 <td style={{ color: "red", paddingLeft: "11px" }}>
                   <IoTrashBinSharp
                     size={25}
-                    onClick={() => handleDeleteSkill(skill.id)}
+                    onClick={() => showConfirmacaoDelete(skill.id)}
                   />
+                  {showDeleteAlert && skill.id === skillDelete && (
+                    <Alert show={true} variant="danger" className="mt-2">
+                      <Alert.Heading style={{ fontSize: "10px" }}>
+                        Tem certeza que deseja deletar?
+                      </Alert.Heading>
+                      <div className="d-flex justify-content-end">
+                        <IoCloseOutline
+                          size={15}
+                          style={{ cursor: "pointer", marginRight: "10px" }}
+                          onClick={closeDeleteAlert}
+                        />
+                        <IoCheckmarkSharp
+                          size={15}
+                          style={{ cursor: "pointer" }}
+                          onClick={confirmDeleteSkill}
+                        />
+                      </div>
+                    </Alert>
+                  )}
                 </td>
               </tr>
             ))}
