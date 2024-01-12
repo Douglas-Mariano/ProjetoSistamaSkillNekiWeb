@@ -68,16 +68,17 @@ const SkillModal = ({
     <Modal show={showModal} onHide={handleCloseModal}>
       <Modal.Header
         style={{
-          backgroundColor: theme.darkBackground,
-          color: theme.lightHighlight,
+          backgroundColor: theme.preto,
+          color: theme.azulAlice,
+          border: theme.preto
         }}
       >
         <Modal.Title>Cadastro de Skill</Modal.Title>
       </Modal.Header>
       <Modal.Body
         style={{
-          backgroundColor: theme.darkBackground,
-          color: theme.lightHighlight,
+          backgroundColor: theme.cinzaClaro,
+          color: theme.preto,
         }}
       >
         <Form.Group controlId="formGridState">
@@ -86,8 +87,8 @@ const SkillModal = ({
             defaultValue="..."
             onChange={handleSkillChange}
             style={{
-              backgroundColor: theme.lightBackground,
-              color: theme.darkBackground,
+              backgroundColor: theme.branco,
+              color: theme.preto,
             }}
           >
             {skills.map((skill) => (
@@ -107,19 +108,19 @@ const SkillModal = ({
               value={level}
               onChange={handleLevelChange}
               style={{
-                backgroundColor: theme.lightBackground,
-                color: theme.darkBackground,
+                backgroundColor: theme.branco,
+                color: theme.preto,
               }}
             />
           </Col>
         </Form.Group>
       </Modal.Body>
-      <Modal.Footer style={{ backgroundColor: theme.darkBackground }}>
-        <Button variant="secondary" onClick={handleCloseModal}>
+      <Modal.Footer style={{ backgroundColor: theme.preto }}>
+        <Button style={{ backgroundColor: theme.cinza, color: theme.branco, border: theme.preto }} onClick={handleCloseModal}>
           Fechar
         </Button>
         <Button
-          variant="primary"
+          style={{ backgroundColor: theme.verde, color: theme.branco, border: theme.preto }}
           onClick={() => {
             handleAdicionarSkill();
             limparFormulario();

@@ -8,20 +8,19 @@ const useTheme = () => {
 
 const ThemeProvider = ({ children }) => {
   const theme = {
-    color1: "#1f1f20",
-    color2: "#4D3EFC",
-    color3: "#8C83ED",
-    color4: "#606d80",
-    color5: "#D9D9D9",
-    color6: "#F6FCFF",
-    color7: "#EAEAEA",
-    darkBackground: "#333333",
-    primaryColor: "#555555",
-    secondaryColor: "#888888",
-    highlightColor: "#aaaaaa",
-    lightBackground: "#ffffff",
-    lightHighlight: "#dddddd",
-    borderSeparator: "#cccccc",
+    darkBackground: "#f7f7f7",
+    c: "##98a1aa",
+    primaryColor: "#2c4156",
+    secondaryColor: "#39586d",
+    highlightColor: "#7f99b2",
+    azulEscuro: "#000080",
+    azulClaro: "#ADD8E6",
+    azulAlice: "#F0F8FF",
+    branco: "#F5F5F5",
+    cinza: "#808080",
+    cinzaClaro: "#d2d7db",
+    preto: "#202020",
+    verde: "#28a745"
   };
 
   return (

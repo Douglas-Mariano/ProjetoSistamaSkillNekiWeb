@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
 import SkillModal from "../../components/SkillModal";
@@ -10,8 +10,10 @@ import {
   IoCloseOutline,
   IoTrashBinSharp,
 } from "react-icons/io5";
-import { BsFileArrowUp, BsFileArrowDown } from "react-icons/bs";
+import { BsPencil } from "react-icons/bs";
+import { FaCirclePlus } from "react-icons/fa6";
 import { Alert, Image } from "react-bootstrap";
+import { useTheme } from "../../context/ThemeContext";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
@@ -24,6 +26,10 @@ const Home = () => {
       id: 0,
     },
   });
+  const [editarSkillId, setEditingSkillId] = useState(null);
+  const [editarLevel, setEditingLevel] = useState(false);
+  const [novoLevel, setNewLevel] = useState();
+  const theme = useTheme();
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -60,14 +66,38 @@ const Home = () => {
     }
   };
 
-  const handleUpdateSkillLevel = async (skillId, newLevel) => {
+  const handleEditarLevel = (skillId) => {
+    setEditingSkillId(skillId);
+    setEditingLevel(true);
+    setNewLevel(usuarioData.skills.find((skill) => skill.id === skillId).level);
+  };
+
+  const handleConfirmarEdicao = async () => {
+    await handleUpdateSkillLevel(editarSkillId, novoLevel);
+    setEditingLevel(false);
+    setEditingSkillId(null);
+  };
+
+  const handleCancelarEdicao = () => {
+    setEditingLevel(false);
+    setEditingSkillId(null);
+    setNewLevel(
+      usuarioData.skills.find((skill) => skill.id === editarSkillId).level
+    );
+  };
+
+  const handleChangeLevel = (e) => {
+    setNewLevel(e.target.value);
+  };
+
+  const handleUpdateSkillLevel = async (skillId, novoLevel) => {
     const token = localStorage.getItem("token");
 
     try {
       const updatedUserData = { ...usuarioData };
       const updatedSkills = updatedUserData.skills.map((skill) => {
         if (skill.id === skillId) {
-          return { ...skill, level: newLevel };
+          return { ...skill, level: novoLevel };
         }
         return skill;
       });
@@ -76,7 +106,7 @@ const Home = () => {
 
       await api.put(
         `/skillsUsuario/${skillId}`,
-        { level: newLevel },
+        { level: novoLevel },
         {
           headers: {
             Authorization: `${token}`,
@@ -98,11 +128,9 @@ const Home = () => {
     setSkillDelete(null);
   };
 
-  const confirmDeleteSkill = () => {
-    if (skillDelete) {
-      handleDeleteSkill(skillDelete);
-      closeDeleteAlert();
-    }
+  const confirmDeleteSkill = async () => {
+    await handleDeleteSkill(skillDelete);
+    closeDeleteAlert();
   };
 
   const handleDeleteSkill = async (skillId) => {
@@ -155,68 +183,66 @@ const Home = () => {
   }, []);
 
   return (
-    <Container className="d-flex flex-column align-items-start vh-100">
-      {usuarioData && (
-        <div className="d-flex flex-column mt-3">
-          <div className="mb-2">
-            <h4>Olá, {usuarioData.nome}!</h4>
-          </div>
-          <div className="d-flex justify-content-between align-items-center">
-            <p className="mb-0">Gostaria de adicionar uma nova skill?</p>
-            <Button
-              className="btn btn-sm btn-primary"
-              onClick={handleShowModal}
-            >
-              Clique aqui
-            </Button>
-          </div>
-        </div>
-      )}
-
+    <Container className="d-flex flex-column align-items-center vh-100" style={{ backgroundColor: theme.cinzaClaro, minWidth: "100%" }}>
       <Table
         striped
         bordered
         hover
-        responsive
         size="sm"
-        variant="secondary"
+        responsive
         className="w-100 overflow-auto mt-5 align-items-center"
       >
         <thead>
           <tr>
-            <th
-              colSpan="5"
-              className="text-center"
-              style={{ fontSize: "24px" }}
-            >
-              Lista de Skills
-            </th>
+            {usuarioData && (
+              <th
+                colSpan="5"
+                className="text-center"
+                style={{ fontSize: "24px", position: "relative", backgroundColor:theme.preto, color: theme.branco }}
+              >
+                Lista de Skills de {usuarioData.nome}
+                <div
+                  style={{
+                    position: "absolute",
+                    right: 15,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: theme.verde,
+                  }}
+                >
+                  <FaCirclePlus size={30} onClick={handleShowModal} />
+                </div>
+              </th>
+            )}
           </tr>
           <tr>
-            <th className="text-center" style={{ fontSize: "16px" }}>
+            <th
+              className="text-center"
+              style={{ fontSize: "16px", maxWidth: "75px", backgroundColor: theme.branco, color: theme.preto }}
+            >
               Imagem
             </th>
             <th
               className="text-center"
-              style={{ fontSize: "16px", minWidth: "200px" }}
+              style={{ fontSize: "16px", minWidth: "200px", maxWidth: "205px", backgroundColor: theme.branco, color: theme.preto }}
             >
               Nome
             </th>
             <th
               className="text-center"
-              style={{ fontSize: "16px", minWidth: "600px" }}
+              style={{ fontSize: "16px", minWidth: "700px", maxWidth: "750px", backgroundColor: theme.branco, color: theme.preto }}
             >
               Descrição
             </th>
             <th
               className="text-center"
-              style={{ fontSize: "16px", minWidth: "75px" }}
+              style={{ fontSize: "16px", minWidth: "75px", maxWidth: "100px", backgroundColor: theme.branco, color: theme.preto }}
             >
-              Nivel
+              Nível
             </th>
             <th
               className="text-center align-items-center"
-              style={{ fontSize: "16px", minWidth: "50px" }}
+              style={{ fontSize: "16px", minWidth: "50px", backgroundColor: theme.branco, color: theme.preto }}
             >
               Ação
             </th>
@@ -231,26 +257,43 @@ const Home = () => {
                     src={skill.skills.imagem}
                     alt={skill.skills.nome}
                     fluid
-                    style={{ width: "100px" }}
+                    style={{ width: "75px", height: "40px" }}
                   />
                 </td>
                 <td>{skill.skills.nome}</td>
                 <td>{skill.skills.descricao}</td>
-                <td className="d-flex justify-content-between align-items-center">
-                  <BsFileArrowUp
-                    onClick={() =>
-                      handleUpdateSkillLevel(skill.id, skill.level + 1)
-                    }
-                    size={25}
-                  />
-                  <span>{skill.level}</span>
-                  <BsFileArrowDown
-                    onClick={() =>
-                      handleUpdateSkillLevel(skill.id, skill.level - 1)
-                    }
-                    size={25}
-                  />
+                <td>
+                  {editarLevel && editarSkillId === skill.id ? (
+                    <div className="d-flex align-items-center">
+                      <Form.Control
+                        type="number"
+                        value={novoLevel}
+                        onChange={handleChangeLevel}
+                        style={{ width: "50px", marginRight: "5px" }}
+                      />
+                      <IoCheckmarkSharp
+                        size={17}
+                        onClick={handleConfirmarEdicao}
+                        style={{ cursor: "pointer", marginRight: "5px" }}
+                      />
+                      <IoCloseOutline
+                        size={17}
+                        onClick={handleCancelarEdicao}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="d-flex justify-content-around align-items-center">
+                      <span>{skill.level}</span>
+                      <BsPencil
+                        size={12}
+                        onClick={() => handleEditarLevel(skill.id)}
+                        style={{ cursor: "pointer", marginLeft: "5px" }}
+                      />
+                    </div>
+                  )}
                 </td>
+
                 <td style={{ color: "red", paddingLeft: "11px" }}>
                   <IoTrashBinSharp
                     size={25}

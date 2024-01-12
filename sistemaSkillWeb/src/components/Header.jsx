@@ -19,10 +19,10 @@ const Header = () => {
   return (
     <div
       style={{
-        backgroundColor: theme.darkBackground,
+        backgroundColor: theme.azulEscuro,
         paddingBottom: "15px",
         fontWeight: "bold",
-        color: theme.lightHighlight,
+        color: theme.azulAlice,
         width: "100%",
         minHeight: "10vh",
         display: "flex",
@@ -43,7 +43,7 @@ const Header = () => {
         <Link
           to="#"
           onClick={handleLogout}
-          style={{ color: theme.lightHighlight }}
+          style={{ color: theme.azulAlice }}
         >
           <SlLogout size={20} />
         </Link>
