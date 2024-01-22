@@ -5,7 +5,6 @@ import Row from "react-bootstrap/Row";
 import { BsGithub, BsLinkedin } from "react-icons/bs";
 import { DiJava, DiReact } from "react-icons/di";
 import { FaMobileAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 
 const Footer = () => {
@@ -19,10 +18,10 @@ const Footer = () => {
   return (
     <div
       style={{
-        backgroundColor: theme.darkBackground,
+        backgroundColor: theme.azulEscuro,
         paddingBottom: "10px",
         fontWeight: "bold",
-        color: theme.lightHighlight,
+        color: theme.azulAlice,
         width: "100%",
         minHeight: "10vh",
         display: "flex",
